@@ -1,62 +1,16 @@
-const quoteContainer = document.getElementById('quote-container');
-const quoteText = document.getElementById('quote');
-const authorText = document.getElementById('author');
-const twitterBtn = document.getElementById('twitter');
-const newQuoteBtn = document.getElementById('new-quote');
-const loader = document.getElementById('loader');
+let apiQuotes = [];
 
-function showloadingSpinner() {
-    loader.hidden = false;
-    quoteContainer.hidden = true; 
+// Get Quotes From API
+async function getQuotes() {
+    const apiUrl = 'https://type.fit/api/quotes';
+} try {
+    const response = await fetch(apiUrl);
+    apiQuotes = await response.json();
+    console.log(apiQuotes);
+} catch (error) {
+    // Cath Error Here
 }
 
-function removeLoadingSpinner() {
-    if (!loader.hidden) {
-        quoteContainer.hidden = false;
-        loader.hidden = true; 
-    }
-}
-
-// Get Quote form API
-async function getQuote() {
-    showloadingSpinner();
-    const proxyUrl= 'https://cors-anywhere.herokuapp.com/'
-    const apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
-    try {
-        const respons = await fetch(proxyUrl + apiUrl);
-        const data = await response.json();
-        // If Author is blank, add 'Unknown';
-        if (data.quoteAuthor === '') {
-            authorText.innerText = 'Unknown';
-        } else {
-            authorText.innerText = data.quoteAuthor;
-        }
-        //.Reduce font size for long quotes
-        if (data.quoteText.length > 120) {
-            quoteText.classList.add('long-quote');
-        } else {
-            quoteText.classList.remove('long-quote');
-        }
-        quoteText.innerText = data.quoteText;
-        // Stop Loader, Show Quote
-        removeLoadingSpinner();
-    } catch (error) {
-        getQuote();
-    }
-}
-
-// Tweet Quote 
-function tweetQuote() {
-    const quote = quoteText.innerText; 
-    const author = authorText.innerText;
-    const twitterUrl = `https://twitter.com/intent/tweet/?tweet?text=${quote} - ${author}`;
-    window.open(twitterUrl, 'blank');
-}
-
-// Event Listeners
-
-newQuoteBtn.addEventListener('click', getQuote);
-twitterBtn.addEventListener('click', tweetQuote);
 
 // On Load
-getQuote(); 
+getQuotes(); 
